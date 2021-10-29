@@ -4,13 +4,11 @@
 #include <string>
 #include <cctype>
 #include "lexer.h"
-#include "evalex.h"
 
 using namespace std;
 
 Lexer::Lexer(string strFileName)
 {
-	fileScanner.open(strFileName, fstream::in);
 	table.push_back(Token(PROGRAM, "program"));
 	table.push_back(Token(ENDPROGRAM, "endprogram"));
 	table.push_back(Token(DEF, "def"));
@@ -28,76 +26,19 @@ Lexer::Lexer(string strFileName)
 	table.push_back(Token(PRINT, "print"));
 	table.push_back(Token(CALL, "call"));
 	table.push_back(Token(RETURN, "return"));
-  table.push_back(Token(THEN, "then"));
+	table.push_back(Token(THEN, "then"));
 	table.push_back(Token(TEOF, "TEOF"));
-  table.push_back(Token(ADICION, "+"));
-  table.push_back(Token(SUSTRACCION, "-"));
-  table.push_back(Token(DIVISION, "/"));
-  table.push_back(Token(MULTIPLICATION, "*"));
-  table.push_back(Token(OR, "||"));
-  table.push_back(Token(AND, "&&"));
-  table.push_back(Token(NELPASTEL, "~"));
-  table.push_back(Token(DIFFERENT, "!="));
-  table.push_back(Token(EQUALS, "=="));
+	table.push_back(Token(ADICION, "+"));
+	table.push_back(Token(SUSTRACCION, "-"));
+	table.push_back(Token(DIVISION, "/"));
+	table.push_back(Token(MULTIPLICATION, "*"));
+	table.push_back(Token(OR, "||"));
+	table.push_back(Token(AND, "&&"));
+	table.push_back(Token(NELPASTEL, "~"));
+	table.push_back(Token(DIFFERENT, "!="));
+	table.push_back(Token(EQUALS, "=="));
 }
 
-Lexer::~Lexer()
-{
-	table.clear();
-	lineScanner.clear();
-}
-
-string Lexer::nextText()
-{ 
-	string text;
-	string temp;
-	do {
-		text = "";
-		
-		if(lineScanner.length() == 0)
-		{
-			if(!fileScanner.eof())
-			{
-				getline(fileScanner,lineScanner, '\n');
-			}
-			else {
-				text = "TEOF";
-			}
-		}
-		else
-		{
-			if(lineScanner.find(" ") != string::npos)
-			{
-				text = lineScanner.substr(0, lineScanner.find(" "));
-				lineScanner = lineScanner.substr(lineScanner.find(" ")+1, lineScanner.length()-1);
-			}
-			else
-			{
-				text = lineScanner.substr(0,lineScanner.length()-1);
-				lineScanner.clear();
-			}
-		}
-	} while (text.length() == 0);
-	return text;
-}
-
-Token* Lexer::nextToken()
-{
-	string text = nextText();
-	for(auto t: table)
-	{
-		string comparar = t.getToken();
-
-		if(comparar.compare(text) == 0) {
-			return new Token(t.getCode(), "");
-		}
-	}
-	
-	if(validVariableName(text)) return new Token(VARIABLE, text);
-	if(validIntConstant(text)) return new Token(CONSTANT, text);
-  
-	return new Token(INVALIDTOKEN, text);
-}
 
 bool isLetter(char c) {
    return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
