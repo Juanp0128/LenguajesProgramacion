@@ -5,7 +5,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "token.h"
 
 using namespace std;
 
